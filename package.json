@@ -1,0 +1,22 @@
+{
+  "name": "cookiejs",
+  "version": "0.1.0",
+  "description": "TODO'",
+  "main": "cookie.js",
+  "scripts": {
+    "test": "test command",
+    "gulp-build": "gulp build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "nickzone"
+  },
+  "keywords": [
+    "cookie"
+  ],
+  "author": "nickzong",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^3.9.1"
+  }
+}
