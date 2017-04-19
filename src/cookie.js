@@ -1,5 +1,3 @@
-
-
 ; (function (window) {
     'use strict';
 
@@ -27,8 +25,9 @@
 
                 expiresDate.setDate(expiresDate.getDate() + opts.expiredays);
                 exs.push(['expires', expiresDate.toGMTString()].join('='));
-            }else if(opts.path) {
-                exs.push(['path',opts.path].join('='));
+            }
+            if (opts.path) {
+                exs.push(['path', opts.path].join('='));
             }
         }
 
@@ -42,19 +41,39 @@
      * @return {string} cookie值
      */
     function get(cookie_name) {
-        var cookie = document.cookie,
-            c_start = cookie.indexOf(cookie_name),
-            v_start,
-            c_end;
+        if (cookie_name) {
+            var cookie = document.cookie,
+                c_start = cookie.indexOf(cookie_name),
+                v_start,
+                c_end;
 
-        if (c_start === -1) {
-            return undefined;
+            if (c_start === -1) {
+                return undefined;
+            }
+
+            v_start = cookie.indexOf('=', c_start) + 1;
+            c_end = cookie.indexOf(';', c_start) > 0 ? cookie.indexOf(';', c_start) : cookie.length;
+
+            return cookie.substring(v_start, c_end);
+        } else {
+            var cookieStr = document.cookie;
+            var cookies = cookieStr.split(';');
+            var cookieObj = {};
+
+            if (cookies[0].length === 0) {
+                return null;
+            }
+
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].split('=');
+                var name = cookie[0];
+                var val = cookie[1];
+
+                cookieObj[name] = val;
+            }
+
+            return cookieObj;
         }
-
-        v_start = cookie.indexOf('=', c_start) + 1;
-        c_end = cookie.indexOf(';', c_start) > 0 ? cookie.indexOf(';', c_start) : cookie.length;
-
-        return cookie.substring(v_start, c_end);
     }
 
     /**
@@ -62,9 +81,7 @@
      * @param {string} cookie_name 需要删除的cookie名
      */
     function remove(cookie_name) {
-        set(cookie_name, get(cookie_name), {
-            expiredays: -1
-        });
+        set(cookie_name, '', { expiredays: -1 });
     }
 
     var Cookies = {

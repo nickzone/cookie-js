@@ -23,7 +23,7 @@ var dest = path.dest = './dist';
 
 // 编译
 gulp.task('default', function () {
-    return gulp.src(src) // 读取源码
+    return gulp.src(src) // 读取源码 
         .pipe(cleanDest(dest))
         .pipe(gulp.dest(dest)) // 写入目标
         .pipe(rename({ suffix: '.min' })) //重命名
