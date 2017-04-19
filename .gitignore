@@ -1,2 +1,6 @@
+﻿#node
 node_modules
+#bower
+bower_components
+#editor
 .vscode
