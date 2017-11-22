@@ -8,42 +8,60 @@
     function _setCookie(cookieStr) {
         document.cookie = cookieStr;
     }
+    
+    /**
+     * 添加trim 支持
+     */
+    if (!String.prototype.trim) {
+        String.prototype.trim = function () {
+            return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+        };
+    }
 
     /**
      * 设置cookie
-     * @param {string} cookie_name cookie名
-     * @param {*} cookie_val cookie值
+     * @param {string} cookieName cookie名
+     * @param {*} cookieVal cookie值
      * @param {*} opts cookie参数
      */
-    function set(cookie_name, cookie_val, opts) {
-        var exs = [],
-            cookieStr;
+    function set(cookieName, cookieVal, opts) {
+        var cookieStr = [[cookieName, cookieVal].join('=')];
 
         if (opts) {
-            if (opts.expiredays) {
+            if (opts.expiredays !== undefined) {
                 var expiresDate = new Date();
 
                 expiresDate.setDate(expiresDate.getDate() + opts.expiredays);
-                exs.push(['expires', expiresDate.toGMTString()].join('='));
+                cookieStr.push(['expires', expiresDate.toGMTString()].join('='));
             }
+
             if (opts.path) {
-                exs.push(['path', opts.path].join('='));
+                cookieStr.push(['path', opts.path].join('='));
+            }
+
+            if (opts.maxAge) {
+                cookieStr.push(['max-age', opts.maxAge].join('='));
+            }
+
+            if (opts.domain) {
+                cookieStr.push(['domain', opts.domain].join('='));
             }
         }
 
-        cookieStr = cookie_name + '=' + cookie_val + ';' + exs.join(';');
+        cookieStr = cookieStr.join(';') + ';';
         _setCookie(cookieStr);
     }
 
     /**
      * 获取cookie
-     * @param {string} cookie_name cookie名
-     * @return {string} cookie值
+     * @param {string} cookieName cookie名
+     * @return {string} cookie值（字符串、对象）
      */
-    function get(cookie_name) {
-        if (cookie_name) {
-            var cookie = document.cookie,
-                c_start = cookie.indexOf(cookie_name),
+    function get(cookieName) {
+        var cookieStr = document.cookie;
+
+        if (cookieName) {
+            var c_start = cookieStr.indexOf(cookieName),
                 v_start,
                 c_end;
 
@@ -51,23 +69,24 @@
                 return undefined;
             }
 
-            v_start = cookie.indexOf('=', c_start) + 1;
-            c_end = cookie.indexOf(';', c_start) > 0 ? cookie.indexOf(';', c_start) : cookie.length;
+            v_start = cookieStr.indexOf('=', c_start) + 1;
+            c_end = cookieStr.indexOf(';', c_start) > 0 ? cookieStr.indexOf(';', c_start) : cookieStr.length;
 
-            return cookie.substring(v_start, c_end);
+            return cookieStr.slice(v_start, c_end);
+
         } else {
-            var cookieStr = document.cookie;
-            var cookies = cookieStr.split(';');
-            var cookieObj = {};
+            var cookies = cookieStr.split(';'),
+                cookieObj = {},
+                cookie, name, val;
 
             if (cookies[0].length === 0) {
                 return null;
             }
 
             for (var i = 0; i < cookies.length; i++) {
-                var cookie = cookies[i].split('=');
-                var name = cookie[0];
-                var val = cookie[1];
+                cookie = cookies[i].split('=');
+                name = cookie[0].trim();
+                val = cookie[1];
 
                 cookieObj[name] = val;
             }
@@ -78,10 +97,12 @@
 
     /**
      * 删除cookie
-     * @param {string} cookie_name 需要删除的cookie名
+     * @param {string} cookieName 需要删除的cookie名
      */
-    function remove(cookie_name) {
-        set(cookie_name, '', { expiredays: -1 });
+    function remove(cookieName) {
+        set(cookieName, ' ', {
+            expiredays: -1
+        });
     }
 
     var Cookies = {
