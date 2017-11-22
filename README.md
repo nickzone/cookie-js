@@ -1,14 +1,16 @@
-cookiejs 一个简单的cookie框架
+cookiejs ：a simple cookie framework
 ===========================
 
 Api
 ---
 
-### 设置cookie
+###　set specific cookie with opitions (设置cookie)
+
 ```js
 Cookies.set(cookieName, cookieVal, opts)
 ```
-opts 可取值
+  opts 参数
+
 ```js
 {
   expiredays: 'days number'         // 过期时间（天），如果没有定义，cookie会在对话结束时过期 
@@ -18,12 +20,15 @@ opts 可取值
 }
 ```
 
-### 获取cookie
+### get specific cookie value or all cookies in a object (获取cookie)
+
 ```js
-Cookies.get(cookieName)
+Cookies.get(cookieName)　// 获取指定cookie
+Cookie.get() // 获取cookie　键值对
 ```
 
-### 删除cookie
+### remove specific cookie　(删除cookie)
+
 ```js
 Cookie.remove(cookieName)
 ```
