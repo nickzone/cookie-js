@@ -1,18 +1,9 @@
 // 载入外挂
 var gulp = require('gulp'),
-    autoprefixer = require('gulp-autoprefixer'),
-    minifycss = require('gulp-minify-css'),
     uglify = require('gulp-uglify'),
-    imagemin = require('gulp-imagemin'),
     rename = require('gulp-rename'),
     cleanDest = require('gulp-clean-dest'),
-    concat = require('gulp-concat'),
-    notify = require('gulp-notify'),
-    cache = require('gulp-cache'),
-    livereload = require('gulp-livereload'),
-    copy = require('gulp-copy'),
-    browserSync = require('browser-sync').create(),
-    reload = browserSync.reload;
+    copy = require('gulp-copy');
 
 // 项目源代码路径
 var path = {};
@@ -28,6 +19,5 @@ gulp.task('default', function () {
         .pipe(gulp.dest(dest)) // 写入目标
         .pipe(rename({ suffix: '.min' })) //重命名
         .pipe(uglify()) // 压缩
-        .pipe(gulp.dest(dest)) // 写入目标
-        .pipe(notify({ message: 'build task complete' })); //提示完成
+        .pipe(gulp.dest(dest)); // 写入目标
 });
