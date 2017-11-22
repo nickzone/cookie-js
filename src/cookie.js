@@ -8,7 +8,7 @@
     function _setCookie(cookieStr) {
         document.cookie = cookieStr;
     }
-    
+
     /**
      * 添加trim 支持
      */
@@ -61,7 +61,7 @@
         var cookieStr = document.cookie;
 
         if (cookieName) {
-            var c_start = cookieStr.indexOf(cookieName),
+            var c_start = cookieStr.indexOf(cookieName + '='),
                 v_start,
                 c_end;
 
@@ -104,7 +104,7 @@
             expiredays: -1
         });
     }
-    
+
     var Cookies = {
         set: set,
         get: get,
