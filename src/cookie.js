@@ -13,37 +13,46 @@
 
     /**
      * 设置cookie
-     * @param {string} cookie_name cookie名
-     * @param {*} cookie_val cookie值
+     * @param {string} cookieName cookie名
+     * @param {*} cookieVal cookie值
      * @param {*} opts cookie参数
      */
-    function set(cookie_name, cookie_val, opts) {
-        var exs = [],
-            cookieStr;
-
+    function set(cookieName, cookieVal, opts) {
+        var cookieStr = [[cookieName,cookieVal].join('=')];
+        
         if (opts) {
-            if (opts.expiredays) {
+            if (opts.expiredays !== undefined) {
                 var expiresDate = new Date();
 
                 expiresDate.setDate(expiresDate.getDate() + opts.expiredays);
-                exs.push(['expires', expiresDate.toGMTString()].join('='));
-            }else if(opts.path) {
-                exs.push(['path',opts.path].join('='));
+                cookieStr.push(['expires', expiresDate.toGMTString()].join('='));
+            }
+            
+            if(opts.path) {
+                cookieStr.push(['path',opts.path].join('='));
+            }
+            
+            if(opts.maxAge) {
+                cookieStr.push(['max-age',opts.maxAge].join('='));
+            }
+            
+            if(opts.domain) {
+                cookieStr.push(['domain',opts.domain].join('='));
             }
         }
 
-        cookieStr = cookie_name + '=' + cookie_val + ';' + exs.join(';');
+        cookieStr = cookieStr.join(';') + ';';
         _setCookie(cookieStr);
     }
 
     /**
      * 获取cookie
-     * @param {string} cookie_name cookie名
+     * @param {string} cookieName cookie名
      * @return {string} cookie值
      */
-    function get(cookie_name) {
+    function get(cookieName) {
         var cookie = document.cookie,
-            c_start = cookie.indexOf(cookie_name),
+            c_start = cookie.indexOf(cookieName),
             v_start,
             c_end;
 
@@ -54,19 +63,19 @@
         v_start = cookie.indexOf('=', c_start) + 1;
         c_end = cookie.indexOf(';', c_start) > 0 ? cookie.indexOf(';', c_start) : cookie.length;
 
-        return cookie.substring(v_start, c_end);
+        return cookie.slice(v_start, c_end);
     }
 
     /**
      * 删除cookie
-     * @param {string} cookie_name 需要删除的cookie名
+     * @param {string} cookieName 需要删除的cookie名
      */
-    function remove(cookie_name) {
-        set(cookie_name, get(cookie_name), {
+    function remove(cookieName) {
+        set(cookieName, get(cookieName), {
             expiredays: -1
         });
     }
-
+    
     var Cookies = {
         set: set,
         get: get,
