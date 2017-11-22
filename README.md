@@ -3,8 +3,7 @@ cookiejs ：a simple cookie framework
 
 Api
 ---
-
-###　set specific cookie with opitions (设置cookie)
+### set specific cookie with opitions (设置cookie)
 
 ```js
 Cookies.set(cookieName, cookieVal, opts)
